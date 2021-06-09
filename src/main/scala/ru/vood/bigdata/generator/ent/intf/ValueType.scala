@@ -1,6 +1,5 @@
 package ru.vood.bigdata.generator.ent.intf
 
-import java.sql.Date
 import java.time.{LocalDate, LocalDateTime}
 
 sealed trait ValueType[R] {
@@ -11,7 +10,9 @@ sealed trait ValueType[R] {
 
   implicit val defaultDate: AnyVal => LocalDateTime = { q =>
 
-    new LocalDateTime(LocalDate.EPOCH).plusHours(q.hashCode())
+//    new LocalDateTime(LocalDate.EPOCH).plusHours(q.hashCode())
+
+    ???
 
   }
 

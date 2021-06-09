@@ -2,3 +2,7 @@
 /project
 /null
 /.idea
+/.gradle
+/gradle
+/build
+/.bsp
