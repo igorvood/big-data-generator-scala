@@ -1,8 +1,5 @@
 package ru.vood.bigdata.generator.ent.intf
 
-import ru.vood.bigdata.generator.ent.intf.ValueType.Num.V
-import ru.vood.bigdata.generator.ent.intf.ValueType.Str.V
-
 import java.time.LocalDateTime
 
 sealed trait ValueType {
@@ -17,7 +14,7 @@ object ValueType {
   case object Str extends ValueType {
     override type V = String // value type
 
-    implicit val defaultStr: String => V = { q => q.hashCode().toString }
+    implicit val defaultStr: String => V = { q => q }
 
     override def defaultGen[T](t: T)(implicit mutate: T => String) = mutate
   }
