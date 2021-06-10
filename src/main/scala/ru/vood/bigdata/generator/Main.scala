@@ -4,6 +4,7 @@ import ru.vood.bigdata.generator.ent.clu.Clu
 import ru.vood.bigdata.generator.ent.intf.{EntityFun, MetaDelete}
 import ru.vood.bigdata.generator.ent.score.Score
 
+import java.nio.file.Files
 import java.time.LocalDateTime
 
 object Main {
