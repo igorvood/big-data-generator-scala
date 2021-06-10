@@ -2,6 +2,7 @@ package ru.vood.bigdata.generator.ent.score
 
 import ru.vood.bigdata.generator.ent.Column
 import ru.vood.bigdata.generator.ent.clu.Clu
+import ru.vood.bigdata.generator.ent.intf.ValueType.{Date, Num, Str}
 import ru.vood.bigdata.generator.ent.intf.{EntityFun, MetaConverter}
 
 import java.time.LocalDateTime
@@ -21,9 +22,16 @@ case class Score(
 
   override def csvStr(implicit meta: Map[String, EntityFun]): String = {
     val defaultFun: Set[Column] = meta(entName).cols
-    val value: List[(String, Column, String => String)] = defaultFun
+    val value = defaultFun
       .map { defFun =>
-        val overrid: String => String = overridenColls.getOrElse(defFun.name, defFun.valueType.defaultGen(id))
+
+        val function = defFun.valueType match {
+          case Str => Str.defaultStr
+          case Num => Num.defaultNum
+          case Date => Date.defaultDate
+        }
+
+        val overrid = overridenColls.getOrElse(defFun.name,function)
         (defFun.name, defFun, overrid)
 
 //        val tuple: (String, Column, String => String) =

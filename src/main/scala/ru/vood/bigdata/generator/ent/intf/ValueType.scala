@@ -1,38 +1,42 @@
 package ru.vood.bigdata.generator.ent.intf
 
+import ru.vood.bigdata.generator.ent.intf.ValueType.Num.V
+import ru.vood.bigdata.generator.ent.intf.ValueType.Str.V
+
 import java.time.LocalDateTime
 
 sealed trait ValueType {
+  type V // value type
 
-  def defaultGen[T, R](t: T)(implicit mutate: T => R) = mutate
+  def defaultGen[T](t: T)(implicit mutate: T => V): T => V
 
 }
 
 object ValueType {
 
-  implicit val defaultStr: AnyVal => String = { q => q.hashCode().toString }
-
-  implicit val defaultNum: AnyVal => Number = { q => q.hashCode() }
-
-  implicit val defaultDate: AnyVal => LocalDateTime = { q =>
-
-    // new LocalDateTime(LocalDate.EPOCH).plusHours(q.hashCode())
-
-    ???
-
-  }
-
-
   case object Str extends ValueType {
-    override def defaultGen[T, String](t: T)(implicit mutate: T => String) = mutate
+    override type V = String // value type
+
+    implicit val defaultStr: String => V = { q => q.hashCode().toString }
+
+    override def defaultGen[T](t: T)(implicit mutate: T => String) = mutate
   }
 
   case object Num extends ValueType {
-    override def defaultGen[T, String](t: T)(implicit mutate: T => String) = mutate
+    override type V = BigDecimal // value type
+
+    implicit val defaultNum: String => V = { q => q.hashCode() }
+
+    override def defaultGen[T](t: T)(implicit mutate: T => BigDecimal) = mutate
   }
 
   case object Date extends ValueType {
-    override def defaultGen[T, String](t: T)(implicit mutate: T => String) = mutate
+
+    override type V = LocalDateTime // value type
+
+    implicit val defaultDate: String => V = _ => LocalDateTime.now()
+
+    override def defaultGen[T](t: T)(implicit mutate: T => LocalDateTime) = mutate
   }
 
 }
