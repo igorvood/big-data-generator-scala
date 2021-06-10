@@ -13,7 +13,7 @@ object Main {
   def main(args: Array[String]): Unit = {
     val scoreMeta = totalMeta("score").cols.map { e => (e.name, e) }.toMap
 
-    val scoreData = (1 to 20)
+    val scoreData = (1 to 2)
       .map { id =>
         val overrideScore = Map[String, String => String](("mer_sign", { q => q.hashCode.toString }), ("date_cr", { q => LocalDateTime.now().plusMinutes(q.hashCode).toString }))
         Score(id.toString, overrideScore, { _ => Set[Clu]() }) }
