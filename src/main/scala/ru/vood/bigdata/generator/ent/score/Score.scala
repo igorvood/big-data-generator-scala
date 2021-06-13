@@ -1,8 +1,6 @@
 package ru.vood.bigdata.generator.ent.score
 
-import ru.vood.bigdata.generator.ent.Column
 import ru.vood.bigdata.generator.ent.clu.Clu
-import ru.vood.bigdata.generator.ent.intf.ValueType.{Date, Num, Str}
 import ru.vood.bigdata.generator.ent.intf.{EntityFun, MetaConverter}
 
 import java.time.LocalDateTime
@@ -10,6 +8,7 @@ import java.time.LocalDateTime
 case class Score(
                   id: String,
                   overridenColls: Map[String, String => String],
+                  overridenCollsList: List[String => String],
                   clus: String => Set[Clu]
                 ) extends MetaConverter with DataCreator {
 
@@ -21,7 +20,11 @@ case class Score(
 
 
   override def csvStr(implicit meta: Map[String, EntityFun]): String = {
-    val defaultFun: Set[Column] = meta(entName).cols
+    overridenCollsList
+      .map { q => q(id) }
+      .mkString(";")
+
+    /*val defaultFun: Set[Column] = meta(entName).cols
     val value = defaultFun
       .map { defFun =>
 
@@ -46,7 +49,8 @@ case class Score(
       }).toList
     val str1 = value1
       .mkString(";")
-    return str1
+    return str1*/
+//    ???
   }
 
 
