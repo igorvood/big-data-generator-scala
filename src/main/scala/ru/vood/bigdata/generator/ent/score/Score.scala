@@ -22,7 +22,6 @@ case class Score(
   implicit val num: String => BigDecimal = it => it.hashCode
   implicit val date: String => LocalDateTime = _ => LocalDateTime.now()
 
-
   override def csvStr(implicit meta: Map[String, EntityFun]): String = {
     scoreFuns
       .map { q => q(id) }
