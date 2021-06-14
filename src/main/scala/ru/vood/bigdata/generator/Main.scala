@@ -2,7 +2,8 @@ package ru.vood.bigdata.generator
 
 import ru.vood.bigdata.generator.ent.Column
 import ru.vood.bigdata.generator.ent.intf.ValueType.{Date, Num, Str}
-import ru.vood.bigdata.generator.ent.intf.{EntityFun, MetaDelete}
+import ru.vood.bigdata.generator.ent.intf.EntityFun
+import ru.vood.bigdata.generator.ent.metadata.MetaDelete
 import ru.vood.bigdata.generator.ent.score.Score
 
 import java.io.{BufferedWriter, FileWriter}
@@ -19,7 +20,7 @@ object Main {
     val cluFunsData = cluFuns(totalMeta, "clu", Map()).map { q => q._3 }.toList
 
 
-    val scoreData: Set[Score] = (1 to 50000)
+    val scoreData: Set[Score] = (1 to 20)
       .map { id =>
         Score(id.toString, /*overrideScore, */
           scoreFunsData, 100, cluFunsData

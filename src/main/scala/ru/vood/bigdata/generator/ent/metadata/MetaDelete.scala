@@ -1,13 +1,14 @@
-package ru.vood.bigdata.generator.ent.intf
+package ru.vood.bigdata.generator.ent.metadata
 
 import ru.vood.bigdata.generator.ent.Column
+import ru.vood.bigdata.generator.ent.intf.EntityFun
 import ru.vood.bigdata.generator.ent.intf.TypeColumn.{AF, HZ}
 import ru.vood.bigdata.generator.ent.intf.ValueType.{Date, Num, Str}
 
 //@Deprecated
 object MetaDelete {
 
-  def getMeta = {
+  lazy val getMeta = {
 
     val value = Set(
       Column("crm_id", Str, HZ),
@@ -25,7 +26,7 @@ object MetaDelete {
       value1
     )
 
-//    заемщик
+    //    заемщик
 
     val value2 = Set(
       Column("id", Str, HZ),
