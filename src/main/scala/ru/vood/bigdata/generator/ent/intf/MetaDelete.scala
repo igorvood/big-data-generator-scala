@@ -25,13 +25,18 @@ object MetaDelete {
       value1
     )
 
+//    заемщик
+
+    val value2 = Set(
+      Column("id", Str, HZ),
+      Column("name", Num, AF),
+      Column("surname", Date, HZ),
+    )
+    val value3 = value2 ++ s ++ n ++ d
+
     val clu = EntityFun(
       "clu",
-      Set(
-        Column("id", Str, HZ),
-        Column("name", Num, AF),
-        Column("surname", Date, HZ),
-      )
+      value3
     )
 
 

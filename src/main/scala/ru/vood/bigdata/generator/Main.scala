@@ -4,6 +4,8 @@ import ru.vood.bigdata.generator.ent.clu.Clu
 import ru.vood.bigdata.generator.ent.intf.ValueType.{Date, Num, Str}
 import ru.vood.bigdata.generator.ent.intf.{EntityFun, MetaDelete}
 import ru.vood.bigdata.generator.ent.score.Score
+import java.io.BufferedWriter
+import java.io.FileWriter
 
 import java.time.LocalDateTime
 
@@ -14,26 +16,30 @@ object Main {
   def main(args: Array[String]): Unit = {
     val overrideScore = Map[String, String => String](("mer_sign", { q => (Math.abs(q.hashCode) % 2).toString }), ("date_cr", { q => LocalDateTime.now().plusMinutes(q.hashCode).toString }))
     val score = "score"
-    val list = scoreFuns(totalMeta, score, overrideScore).map { q => q._3 }
-      .toList
+    val list = scoreFuns(totalMeta, score, overrideScore).map { q => q._3 }.toList
 
-    val scoreData: Set[Score] = (1 to 2000000)
+    val scoreData: Set[Score] = (1 to 200)
       .map { id =>
-        Score(id.toString, /*overrideScore, */ list, { _ => Set[Clu]() })
+        Score(id.toString, /*overrideScore, */
+          list, 10
+        )
       }
       .toSet
 
 
-    import java.io.BufferedWriter
-    import java.io.FileWriter
-    val writer: BufferedWriter = new BufferedWriter(new FileWriter("e:/temp/"+score+".csv"))
-    scoreData.foreach(q => writer.write(q.csvStr+"\n") )
+    val writerScore: BufferedWriter = new BufferedWriter(new FileWriter("e:/temp/"+score+".csv"))
+    scoreData.foreach(q => writerScore.write(q.csvStr+"\n") )
+    writerScore.close()
 
-    writer.close()
+    val writerClu: BufferedWriter = new BufferedWriter(new FileWriter("e:/temp/clu.csv"))
+    scoreData
+      .flatMap(s=>s.clus())
+      .foreach(q => writerClu.write(q.csvStr+"\n") )
+    writerClu.close()
 
-//    val value = scoreData.map { q => q.csvStr }.mkString("\n")
-//
-//    println(value)
+//    запись скоров окончена
+
+
 
   }
 
