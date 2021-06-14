@@ -29,8 +29,8 @@ object Main {
 
   }
 
-  private def scoreFuns(meta: Map[String, EntityFun], score: String, overrideDefaults: Map[String, String => String]) = {
-    val scoreMeta = meta(score).cols
+  private def scoreFuns(meta: Map[String, EntityFun], nameEnt: String, overrideDefaults: Map[String, String => String]) = {
+    val scoreMeta = meta(nameEnt).cols
     val value1 = scoreMeta.map { defFun =>
 
       val function = defFun.valueType match {
