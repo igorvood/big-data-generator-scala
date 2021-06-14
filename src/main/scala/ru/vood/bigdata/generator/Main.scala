@@ -1,5 +1,6 @@
 package ru.vood.bigdata.generator
 
+import ru.vood.bigdata.generator.ent.Column
 import ru.vood.bigdata.generator.ent.clu.Clu
 import ru.vood.bigdata.generator.ent.intf.ValueType.{Date, Num, Str}
 import ru.vood.bigdata.generator.ent.intf.{EntityFun, MetaDelete}
@@ -13,25 +14,8 @@ object Main {
 
   def main(args: Array[String]): Unit = {
     val overrideScore = Map[String, String => String](("mer_sign", { q => q.hashCode.toString }), ("date_cr", { q => LocalDateTime.now().plusMinutes(q.hashCode).toString }))
-    val meta = totalMeta
-    val score = "score"
-
-    val scoreMeta = meta(score).cols
-    val value1 = scoreMeta.map { defFun =>
-
-      val function = defFun.valueType match {
-        case Str => Str.stringConverter(Str.defaultStr)
-        case Num => Num.stringConverter(Num.defaultNum)
-        case Date => Date.stringConverter(Date.defaultDate)
-        case _ => throw new IllegalStateException("asd")
-      }
-      val overrid = overrideScore.getOrElse(defFun.name, function)
-      (defFun.name, defFun, overrid)
-    }
-    val list = value1
-      .map { q => q._3 }
+    val list = scoreFuns(totalMeta, "score", overrideScore).map { q => q._3 }
       .toList
-
 
     val scoreData = (1 to 20)
       .map { id =>
@@ -45,5 +29,21 @@ object Main {
 
   }
 
+  private def scoreFuns(meta: Map[String, EntityFun], score: String, overrideDefaults: Map[String, String => String]) = {
+    val scoreMeta = meta(score).cols
+    val value1 = scoreMeta.map { defFun =>
+
+      val function = defFun.valueType match {
+        case Str => Str.stringConverter(Str.defaultStr)
+        case Num => Num.stringConverter(Num.defaultNum)
+        case Date => Date.stringConverter(Date.defaultDate)
+        case _ => throw new IllegalStateException("asd")
+      }
+
+      val overrid = overrideDefaults.getOrElse(defFun.name, function)
+      (defFun.name, defFun, overrid)
+    }
+    value1
+  }
 }
 
