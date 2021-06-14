@@ -10,7 +10,7 @@ object ScoreMetaData {
 
   lazy val scoreFunsData: Set[(String, Column, Int => String)] = scoreFuns(overrideScore)
 
-  lazy val sFunsListData =  scoreFuns(overrideScore).map { q => q._3 }.toList
+  lazy val sFunsListData = scoreFuns(overrideScore).map { q => q._3 }.toList
 
   val overrideScore = Map[String, Int => String](
     ("mer_sign", { q => (Math.abs(q.hashCode) % 2).toString }),

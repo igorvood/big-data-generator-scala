@@ -47,19 +47,7 @@ object Main {
 
   }
 
-/*  private def scoreFuns(meta: Map[String, EntityFun], nameEnt: String, overrideDefaults: Map[String, String => String]): Set[(String, Column, String => String)] = {
-    val value1 = meta(nameEnt).cols.map { defFun =>
-      val function = defFun.valueType match {
-        case Str => Str.stringConverter(Str.defaultStr)
-        case Num => Num.stringConverter(Num.defaultInt)
-        case Date => Date.stringConverter(Date.defaultString)
-        case _ => throw new IllegalStateException("asd")
-      }
-      val overrid = overrideDefaults.getOrElse(defFun.name, function)
-      (defFun.name, defFun, overrid)
-    }
-    value1
-  }*/
+
 
   private def cluFuns(meta: Map[String, EntityFun], nameEnt: String, overrideDefaults: Map[String, ((String, Score)) => String]): Set[(String, Column, ((String, Score)) => String)] = {
     val value1: Set[(String, Column, ((String, Score)) => String)] = meta(nameEnt).cols.map { defFun =>
