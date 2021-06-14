@@ -22,7 +22,7 @@ object Main {
 
     val scoreData: Set[Score] = (1 to 20)
       .map { id =>
-        Score(id.toString, /*overrideScore, */
+        Score(id,
           sFunsListData, 100, cluFunsData
         )
       }
@@ -47,26 +47,26 @@ object Main {
 
   }
 
-  private def scoreFuns(meta: Map[String, EntityFun], nameEnt: String, overrideDefaults: Map[String, String => String]): Set[(String, Column, String => String)] = {
+/*  private def scoreFuns(meta: Map[String, EntityFun], nameEnt: String, overrideDefaults: Map[String, String => String]): Set[(String, Column, String => String)] = {
     val value1 = meta(nameEnt).cols.map { defFun =>
       val function = defFun.valueType match {
         case Str => Str.stringConverter(Str.defaultStr)
-        case Num => Num.stringConverter(Num.defaultNum)
-        case Date => Date.stringConverter(Date.defaultDate)
+        case Num => Num.stringConverter(Num.defaultInt)
+        case Date => Date.stringConverter(Date.defaultString)
         case _ => throw new IllegalStateException("asd")
       }
       val overrid = overrideDefaults.getOrElse(defFun.name, function)
       (defFun.name, defFun, overrid)
     }
     value1
-  }
+  }*/
 
   private def cluFuns(meta: Map[String, EntityFun], nameEnt: String, overrideDefaults: Map[String, ((String, Score)) => String]): Set[(String, Column, ((String, Score)) => String)] = {
     val value1: Set[(String, Column, ((String, Score)) => String)] = meta(nameEnt).cols.map { defFun =>
       val function: ((String, Score)) => String = defFun.valueType match {
         case Str => Str.stringConverter[(String, Score)](id => id._2.id + id._1)
         case Num => Num.stringConverter[(String, Score)](id => (id._2.id + id._1).hashCode)
-        case Date => Date.stringConverter[(String, Score)](id => LocalDateTime.now())
+        case Date => Date.stringConverter[(String, Score)](_ => LocalDateTime.now())
         case _ => throw new IllegalStateException("asd")
       }
       val overrid: ((String, Score)) => String = overrideDefaults.getOrElse(defFun.name, function)

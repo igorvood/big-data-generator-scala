@@ -17,7 +17,8 @@ object ValueType {
   case object Str extends ValueType {
     override type OUT_VAL = String // value type
 
-    implicit val defaultStr: String => OUT_VAL = { q => q }
+     val defaultStr: String => OUT_VAL = { q => q }
+     val defaultInt: Int => OUT_VAL = { q => q.toString }
 
 //    override def defaultGen[T](t: T)(implicit mutate: T => String) = mutate
   }
@@ -25,7 +26,8 @@ object ValueType {
   case object Num extends ValueType {
     override type OUT_VAL = BigDecimal // value type
 
-    implicit val defaultNum: String => OUT_VAL = { q => q.hashCode() }
+     val defaultStr: String => OUT_VAL = { q => q.hashCode() }
+     val defaultInt: Int => OUT_VAL = { q => q.hashCode() }
 
 //    override def defaultGen[T](t: T)(implicit mutate: T => OUT_VAL) = mutate
   }
@@ -34,7 +36,8 @@ object ValueType {
 
     override type OUT_VAL = LocalDateTime // value type
 
-    implicit val defaultDate: String => OUT_VAL = _ => LocalDateTime.now()
+     val defaultString: String => OUT_VAL = _ => LocalDateTime.now()
+     val defaultInt: Int => OUT_VAL = _ => LocalDateTime.now()
 
 //    override def defaultGen[T](t: T)(implicit mutate: T => LocalDateTime) = mutate
   }

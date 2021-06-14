@@ -6,9 +6,9 @@ import ru.vood.bigdata.generator.ent.intf.{EntityFun, MetaConverter}
 import java.time.LocalDateTime
 
 case class Score(
-                  id: String,
+                  id: Int,
                   //                  overridenColls: Map[String, String => String],
-                  scoreFuns: List[String => String],
+                  scoreFuns: List[Int => String],
                   cluCnt: Int,
                   cliFuns: List[((String, Score)) => String]
 
