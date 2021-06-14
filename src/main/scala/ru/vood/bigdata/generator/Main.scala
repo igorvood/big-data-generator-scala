@@ -1,12 +1,11 @@
 package ru.vood.bigdata.generator
 
-import ru.vood.bigdata.generator.ent.clu.Clu
+import ru.vood.bigdata.generator.ent.Column
 import ru.vood.bigdata.generator.ent.intf.ValueType.{Date, Num, Str}
 import ru.vood.bigdata.generator.ent.intf.{EntityFun, MetaDelete}
 import ru.vood.bigdata.generator.ent.score.Score
-import java.io.BufferedWriter
-import java.io.FileWriter
 
+import java.io.{BufferedWriter, FileWriter}
 import java.time.LocalDateTime
 
 object Main {
@@ -16,34 +15,38 @@ object Main {
   def main(args: Array[String]): Unit = {
     val overrideScore = Map[String, String => String](("mer_sign", { q => (Math.abs(q.hashCode) % 2).toString }), ("date_cr", { q => LocalDateTime.now().plusMinutes(q.hashCode).toString }))
     val score = "score"
-    val list = scoreFuns(totalMeta, score, overrideScore).map { q => q._3 }.toList
+    val scoreFunsData: List[String => String] = scoreFuns(totalMeta, score, overrideScore).map { q => q._3 }.toList
+    val cluFunsData = cluFuns(totalMeta, "clu", Map()).map { q => q._3 }.toList
 
-    val scoreData: Set[Score] = (1 to 200)
+
+    val scoreData: Set[Score] = (1 to 50000)
       .map { id =>
         Score(id.toString, /*overrideScore, */
-          list, 10
+          scoreFunsData, 100, cluFunsData
         )
       }
       .toSet
 
-
-    val writerScore: BufferedWriter = new BufferedWriter(new FileWriter("e:/temp/"+score+".csv"))
-    scoreData.foreach(q => writerScore.write(q.csvStr+"\n") )
+    println("begin " + LocalDateTime.now())
+    val writerScore: BufferedWriter = new BufferedWriter(new FileWriter("e:/temp/" + score + ".csv"))
+    scoreData.foreach(q => writerScore.write(q.csvStr + "\n"))
     writerScore.close()
+
+    println("write Score " + LocalDateTime.now())
 
     val writerClu: BufferedWriter = new BufferedWriter(new FileWriter("e:/temp/clu.csv"))
     scoreData
-      .flatMap(s=>s.clus())
-      .foreach(q => writerClu.write(q.csvStr+"\n") )
+      .flatMap(s => s.clus())
+      .foreach(q => writerClu.write(q.csvStr + "\n"))
     writerClu.close()
+    println("write clu" + LocalDateTime.now())
 
-//    запись скоров окончена
-
+    //    запись скоров окончена
 
 
   }
 
-  private def scoreFuns(meta: Map[String, EntityFun], nameEnt: String, overrideDefaults: Map[String, String => String]) = {
+  private def scoreFuns(meta: Map[String, EntityFun], nameEnt: String, overrideDefaults: Map[String, String => String]): Set[(String, Column, String => String)] = {
     val value1 = meta(nameEnt).cols.map { defFun =>
       val function = defFun.valueType match {
         case Str => Str.stringConverter(Str.defaultStr)
@@ -55,6 +58,22 @@ object Main {
       (defFun.name, defFun, overrid)
     }
     value1
+  }
+
+  private def cluFuns(meta: Map[String, EntityFun], nameEnt: String, overrideDefaults: Map[String, ((String, Score)) => String]): Set[(String, Column, ((String, Score)) => String)] = {
+    val value1: Set[(String, Column, ((String, Score)) => String)] = meta(nameEnt).cols.map { defFun =>
+      val function: ((String, Score)) => String = defFun.valueType match {
+        case Str => Str.stringConverter[(String, Score)](id => id._2.id + id._1)
+        case Num => Num.stringConverter[(String, Score)](id => (id._2.id + id._1).hashCode)
+        case Date => Date.stringConverter[(String, Score)](id => LocalDateTime.now())
+        case _ => throw new IllegalStateException("asd")
+      }
+      val overrid: ((String, Score)) => String = overrideDefaults.getOrElse(defFun.name, function)
+      (defFun.name, defFun, overrid)
+    }
+    value1
+
+
   }
 
 

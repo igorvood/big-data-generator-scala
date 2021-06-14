@@ -5,7 +5,7 @@ import ru.vood.bigdata.generator.ent.score.{DataCreator, Score}
 
 case class Clu(id: String,
           score: Score,
-          overridenCollsList: List[(String, Score) => String]
+          overridenCollsList: List[((String, Score)) => String]
 
 
          ) extends DataCreator {

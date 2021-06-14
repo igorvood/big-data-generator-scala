@@ -8,9 +8,12 @@ import java.time.LocalDateTime
 case class Score(
                   id: String,
                   //                  overridenColls: Map[String, String => String],
-                  overridenCollsList: List[String => String],
-                  cluCnt: Int
-//                  clus: String => Set[Clu]
+                  scoreFuns: List[String => String],
+                  cluCnt: Int,
+                  cliFuns: List[((String, Score)) => String]
+
+
+                  //                  clus: String => Set[Clu]
                 ) extends MetaConverter with DataCreator {
 
   val entName = "score"
@@ -21,15 +24,15 @@ case class Score(
 
 
   override def csvStr(implicit meta: Map[String, EntityFun]): String = {
-    overridenCollsList
+    scoreFuns
       .map { q => q(id) }
       .mkString(";")
   }
 
 
-  def clus() : Set[Clu]={
-    (1 to cluCnt).map{ n=>
-      Clu(n.toString, this, List())
+  def clus(): Set[Clu] = {
+    (1 to cluCnt).map { n =>
+      Clu(n.toString, this, cliFuns)
     }.toSet
 
   }
