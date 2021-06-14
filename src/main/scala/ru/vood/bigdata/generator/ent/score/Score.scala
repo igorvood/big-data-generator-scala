@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 
 case class Score(
                   id: String,
-                  overridenColls: Map[String, String => String],
+//                  overridenColls: Map[String, String => String],
                   overridenCollsList: List[String => String],
                   clus: String => Set[Clu]
                 ) extends MetaConverter with DataCreator {
