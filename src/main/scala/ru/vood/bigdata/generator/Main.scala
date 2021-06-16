@@ -4,7 +4,7 @@ import ru.vood.bigdata.generator.ent.Column
 import ru.vood.bigdata.generator.ent.intf.EntityFun
 import ru.vood.bigdata.generator.ent.intf.ValueType.{Date, Num, Str}
 import ru.vood.bigdata.generator.ent.metadata.MetaDelete
-import ru.vood.bigdata.generator.ent.metadata.ScoreMetaData.sFunsListData
+import ru.vood.bigdata.generator.ent.metadata.ScoreMetaData.{colsData, sFunsListData}
 import ru.vood.bigdata.generator.ent.score.Score
 
 import java.io.{BufferedWriter, FileWriter}
@@ -22,9 +22,7 @@ object Main {
 
     val scoreData: Set[Score] = (1 to 20)
       .map { id =>
-        Score(id,
-          sFunsListData, 100, cluFunsData
-        )
+        Score(id, sFunsListData, colsData, 100, cluFunsData)
       }
       .toSet
 
@@ -48,11 +46,10 @@ object Main {
   }
 
 
-
   private def cluFuns(meta: Map[String, EntityFun], nameEnt: String, overrideDefaults: Map[String, ((String, Score)) => String]): Set[(String, Column, ((String, Score)) => String)] = {
     val value1: Set[(String, Column, ((String, Score)) => String)] = meta(nameEnt).cols.map { defFun =>
       val function: ((String, Score)) => String = defFun.valueType match {
-        case Str => Str.stringConverter[(String, Score)](id => id._2.id + id._1)
+        case Str => Str.stringConverter[(String, Score)](id => s"${id._2.id}_${id._1}")
         case Num => Num.stringConverter[(String, Score)](id => (id._2.id + id._1).hashCode)
         case Date => Date.stringConverter[(String, Score)](_ => LocalDateTime.now())
         case _ => throw new IllegalStateException("asd")

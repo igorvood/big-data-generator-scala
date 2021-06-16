@@ -8,9 +8,11 @@ import java.time.LocalDateTime
 
 object ScoreMetaData {
 
-  lazy val scoreFunsData: Set[(String, Column, Int => String)] = scoreFuns(overrideScore)
+  lazy val scoreFunsData: Vector[(String, Column, Int => String)] = scoreFuns(overrideScore)
 
-  lazy val sFunsListData = scoreFuns(overrideScore).map { q => q._3 }.toList
+  lazy val sFunsListData: Vector[Int => String] = scoreFunsData.map { q => q._3 }
+
+  lazy val colsData: Map[String, (Column, Int)] = scoreFunsData.zipWithIndex.map { q => (q._1._2.name, (q._1._2, q._2)) }.toMap
 
   val overrideScore = Map[String, Int => String](
     ("mer_sign", { q => (Math.abs(q.hashCode) % 2).toString }),
@@ -21,7 +23,7 @@ object ScoreMetaData {
 
   private val scoreMeta: EntityFun = MetaDelete.getMeta(score)
 
-  private def scoreFuns(overrideDefaults: Map[String, Int => String]): Set[(String, Column, Int => String)] = {
+  private def scoreFuns(overrideDefaults: Map[String, Int => String]): Vector[(String, Column, Int => String)] = {
     val value1: Set[(String, Column, Int => String)] = scoreMeta.cols.map { defFun =>
       val function = defFun.valueType match {
         case Str => Str.stringConverter(Str.defaultInt)
@@ -32,7 +34,8 @@ object ScoreMetaData {
       val overrid = overrideDefaults.getOrElse(defFun.name, function)
       (defFun.name, defFun, overrid)
     }
-    value1
+    val vector: Vector[(String, Column, Int => String)] = value1.toVector
+    vector
   }
 
 
