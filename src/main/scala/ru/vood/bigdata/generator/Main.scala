@@ -41,8 +41,6 @@ object Main {
     println("write clu" + LocalDateTime.now())
 
     //    запись скоров окончена
-
-
   }
 
 
