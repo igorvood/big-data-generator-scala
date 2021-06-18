@@ -24,6 +24,7 @@ case class ScoreHard(
                       col_20: Int
                     ) {
 
+/*
   require(id > 0)
   require(col_2.contains("VAL_"), {
     "must contains VAL_ current val => " + col_1
@@ -142,4 +143,5 @@ case class ScoreHard(
   require(id > 0)
   require(id > 0)
 
+*/
 }
