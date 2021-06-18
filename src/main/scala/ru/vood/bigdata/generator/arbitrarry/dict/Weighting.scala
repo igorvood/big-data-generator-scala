@@ -17,13 +17,15 @@ object Weighting {
    }*/
 
   implicit def dictWeight[T]: List[(Int, T)] => WeightedDictionary[T] = { dict =>
-    var total = 0L
-    val builder = TreeMap.newBuilder[Int, Gen[T]]
+    var total = 0
+    val builder = TreeMap.newBuilder[Int, T]
     dict.foreach { case (weight, value) =>
-      total += weight
-      builder += (total, value)
+      total.+=(weight)
+      builder.addOne(total, value)
     }
-    WeightedDictionary(dict.map(q => q._1).sum, builder.result)
+    val sum = dict.map(q => q._1).sum
+    val result = builder.result()
+    WeightedDictionary(sum, result)
   }
 
 
