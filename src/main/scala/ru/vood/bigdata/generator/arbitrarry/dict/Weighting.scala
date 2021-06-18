@@ -6,16 +6,6 @@ import scala.collection.immutable.TreeMap
 
 object Weighting {
 
-  /* implicit def dictWeight[T](dict: List[(Int, T)]): WeightedDictionary[T] = {
-     var total = 0L
-     val builder = TreeMap.newBuilder[Int, Gen[T]]
-     dict.foreach { case (weight, value) =>
-       total += weight
-       builder += (total, value)
-     }
-     WeightedDictionary(dict.map(q => q._1).sum, builder.result)
-   }*/
-
   implicit def dictWeight[T]: List[(Int, T)] => WeightedDictionary[T] = { dict =>
     var total = 0
     val builder = TreeMap.newBuilder[Int, T]
