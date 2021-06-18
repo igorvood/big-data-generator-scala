@@ -5,7 +5,23 @@ case class ScoreHard(
                       col_1: String,
                       col_2: String,
                       col_3: String,
-                      col_4: Int
+                      col_4: Int,
+                      col_5: Int,
+                      col_6: Int,
+                      col_7: Int,
+                      col_8: Int,
+                      col_9: Int,
+                      col_10: Int,
+                      col_11: Int,
+                      col_12: Int,
+                      col_13: Int,
+                      col_14: Int,
+                      col_15: Int,
+                      col_16: Int,
+                      col_17: Int,
+                      col_18: Int,
+                      col_19: Int,
+                      col_20: Int
                     ) {
 
   require(id > 0)
