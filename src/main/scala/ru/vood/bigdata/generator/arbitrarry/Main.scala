@@ -19,7 +19,7 @@ object Main {
 
     println("begin => " + LocalDateTime.now())
     println("======================")
-    val cntScore = 1_000_000_000
+    val cntScore = 10
 
     val score: () => LazyList[Option[ScoreHard]] = { () =>
       (1 to cntScore).to(LazyList).map(id => GenScoreHard(id, weightedDictionary).genScore.sample)
@@ -41,42 +41,8 @@ object Main {
       println("======================")
     })
 
-
-    val value3 = CompletableFuture.runAsync(() => {
-      CsvPrinter.print[ScoreHard]("score_2", score, { score => s"${score.id};${score.col_1};${score.col_2};${score.col_3};${score.col_4}" })
-      println("======================")
-    })
-    val value4 = CompletableFuture.runAsync(() => {
-      CsvPrinter.print[CluHard]("clu_2", clu, { clu => s"${clu.id};${clu.name};${clu.inn}" })
-      println("======================")
-    })
-
-    val value5 = CompletableFuture.runAsync(() => {
-      CsvPrinter.print[ScoreHard]("score_3", score, { score => s"${score.id};${score.col_1};${score.col_2};${score.col_3};${score.col_4}" })
-      println("======================")
-    })
-    val value6 = CompletableFuture.runAsync(() => {
-      CsvPrinter.print[CluHard]("clu_3", clu, { clu => s"${clu.id};${clu.name};${clu.inn}" })
-      println("======================")
-    })
-
-    val value7 = CompletableFuture.runAsync(() => {
-      CsvPrinter.print[ScoreHard]("score_4", score, { score => s"${score.id};${score.col_1};${score.col_2};${score.col_3};${score.col_4}" })
-      println("======================")
-    })
-    val value8 = CompletableFuture.runAsync(() => {
-      CsvPrinter.print[CluHard]("clu_4", clu, { clu => s"${clu.id};${clu.name};${clu.inn}" })
-      println("======================")
-    })
-
     value.join()
     value1.join()
-    value4.join()
-    value3.join()
-    value5.join()
-    value6.join()
-    value7.join()
-    value8.join()
 
     println("end => " + LocalDateTime.now())
   }
